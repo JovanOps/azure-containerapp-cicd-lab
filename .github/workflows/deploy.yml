@@ -29,11 +29,19 @@ jobs:
       - run: |
           az extension add --name containerapp --upgrade
 
-          echo "=== LIST RESOURCE GROUP ==="
+          echo "=== ACCOUNT ==="
+          az account show
+
+          echo "=== RESOURCE GROUPS ==="
           az group list -o table
 
-          echo "=== LIST CONTAINER APPS ==="
-          az containerapp list -o table
+          echo "=== CONTAINER APPS IN RG ==="
+          az containerapp list --resource-group rg-containerapp-lab -o table
+
+          echo "=== SHOW EXACT APP ==="
+          az containerapp show \
+            --name demo-app-container \
+            --resource-group rg-containerapp-lab
 
           echo "=== TRY UPDATE ==="
           az containerapp update \
