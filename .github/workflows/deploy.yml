@@ -23,11 +23,19 @@ jobs:
       - run: az acr login --name $ACR_NAME
 
       - run: |
-          docker build -t $ACR_NAME.azurecr.io/$IMAGE_NAME:${{ github.sha }} ./app
+          docker build -f ./app/Dockerfile -t $ACR_NAME.azurecr.io/$IMAGE_NAME:${{ github.sha }} ./app
           docker push $ACR_NAME.azurecr.io/$IMAGE_NAME:${{ github.sha }}
 
       - run: |
           az extension add --name containerapp --upgrade
+
+          echo "=== LIST RESOURCE GROUP ==="
+          az group list -o table
+
+          echo "=== LIST CONTAINER APPS ==="
+          az containerapp list -o table
+
+          echo "=== TRY UPDATE ==="
           az containerapp update \
             --name demo-app-container \
             --resource-group rg-containerapp-lab \
